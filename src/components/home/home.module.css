@@ -1,0 +1,8 @@
+.carouselImage {
+  max-width: 400px;
+  max-height: 350px;
+  display: block;
+  margin: 0 auto;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 15px;
+}
