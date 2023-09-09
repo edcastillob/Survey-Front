@@ -1,4 +1,4 @@
-import styles from "./Landing.module.css";
+import styles from "./landing.module.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 // import Slider from "react-slick";
