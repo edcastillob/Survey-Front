@@ -9,7 +9,7 @@
 }
 
 .logo{
-    /* border: 1px solid white; */
+
     width: 7%;
     height: auto;
     display: flex;
@@ -25,11 +25,11 @@
     position: absolute;
     top: 0;
     left: 0;
-    margin: 20px; /* Ajusta el margen según sea necesario */
+    margin: 20px; 
   }
 
   .content{
-    /* border: 1px solid white; */
+   
     position: relative;
     background-color: rgba(0, 0, 0, 0.541);
     top: 20%;
@@ -44,7 +44,7 @@
     color: #cacaca;
 }
 .item{
-    /* border: 1px solid white; */
+   
     width: 90%;
     height: 15%;
     display: flex;

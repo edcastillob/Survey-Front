@@ -1,7 +1,7 @@
 import styles from "./Landing.module.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
-import Slider from "react-slick";
+// import Slider from "react-slick";
 import hp from "../../assets/hp.png";
 import xiaomi from "../../assets/xiaomi.png";
 import apple from "../../assets/puma.png";
