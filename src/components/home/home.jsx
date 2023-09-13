@@ -100,6 +100,7 @@ export const Home = () => {
       </div>
       <div style={imageDivStyle}>
         {/* Slider de imágenes */}
+        <br />
         <Carousel activeIndex={activeIndex} next={next} previous={previous}>
           <CarouselIndicators
             items={items}

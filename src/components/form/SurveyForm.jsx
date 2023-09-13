@@ -29,7 +29,7 @@ export const SurveyForm = () => {
       !phone_number ||
       !how_found ||
       preferred_language === "default";
-    console.log(isDisabled);
+    // console.log(isDisabled);
     setButtonDisable(isDisabled);
   };
 
@@ -47,8 +47,9 @@ export const SurveyForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(data);
+    // console.log(data);
     dispatch(addSurvey(data));
+    dispatch(getSurvey());
     toast.success("¡Registro creado!");
     setData({
       full_name: "",

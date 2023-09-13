@@ -3,6 +3,7 @@ import {
   DELETE_SURVEY,
   GET_SURVEY,
   GET_SURVEY_ID,
+  ORDER_CONTACT,
   PUT_SURVEY,
 } from "../actions/types";
 
@@ -44,6 +45,12 @@ function reducer(state = initialState, actions) {
         ...state,
         survey: updatedSurveyAll,
       };
+    case ORDER_CONTACT:
+        return{
+          ...state,
+          survey:actions.payload,
+        }
+      
 
     default:
       return state;

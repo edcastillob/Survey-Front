@@ -5,6 +5,7 @@ import {
   DELETE_SURVEY,
   GET_SURVEY,
   GET_SURVEY_ID,
+  ORDER_CONTACT,
   PUT_SURVEY,
 } from "./types";
 
@@ -32,8 +33,8 @@ export const getSurvey = () => {
 };
 export const surveyEdit = (surveyId, editSurvey) => {
   return async (dispatch) => {
-    console.log("id: ", surveyId);
-    console.log("cuerpo: ", editSurvey);
+    // console.log("id: ", surveyId);
+    // console.log("cuerpo: ", editSurvey);
     try {
       await axios.put(`${ENDPOINT}survey/${surveyId}`, editSurvey);
 
@@ -69,6 +70,16 @@ export const deleteSurvey = (itemId) => async (dispatch) => {
     dispatch({ type: DELETE_SURVEY, payload: itemId });
   } catch (error) {
     console.error("Error deleting survey:", error);
+    return error.message;
+  }
+};
+export const orderContact = (contact) => async (dispatch) => {
+  try {
+    const response = await axios.get(`${ENDPOINT}surveycontact/${contact}`);
+    console.log(response.data)
+    dispatch({ type: ORDER_CONTACT, payload: response.data });
+  } catch (error) {
+    console.error("Error order survey:", error);
     return error.message;
   }
 };

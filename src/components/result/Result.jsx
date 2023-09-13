@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteSurvey, getSurvey } from "../../redux/actions/actions";
+import { deleteSurvey, getSurvey, orderContact } from "../../redux/actions/actions";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import "bootstrap/dist/css/bootstrap.min.css";
+import logo from '../../assets/logo.png';
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Input,
-  Label,
   Form,
-  FormGroup,
 } from "reactstrap";
 
 import { EditSurvey } from "../editSurvey/EditSurvey";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import yes from '../../assets/yes.jpg';
+import not from '../../assets/no.png';
+import { SearchBar } from "../searchBar/SearchBar";
+import style from './Result.module.css'
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 
 export const Result = () => {
   const dispatch = useDispatch();
@@ -31,15 +37,12 @@ export const Result = () => {
   }, [dispatch, survey]);
 
   const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(0);
-  // inicio y final para mostrar los registros
+  const [currentPage, setCurrentPage] = useState(0);  
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  // Filtra los registros
   const recordsToDisplay = survey.slice(startIndex, endIndex);
-  // total de páginas
   const totalPages = Math.ceil(survey.length / itemsPerPage);
-  //  cambiar de página
+ 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -50,17 +53,8 @@ export const Result = () => {
 
   const toggle = () => setModal(!modal);
 
-  const changeBackdrop = (e) => {
-    let { value } = e.target;
-    if (value !== "static") {
-      value = JSON.parse(value);
-    }
-    setBackdrop(value);
-  };
 
-  const changeKeyboard = (e) => {
-    setKeyboard(e.currentTarget.checked);
-  };
+
 
   const handleDelete = (itemId) => {
     swal({
@@ -75,19 +69,63 @@ export const Result = () => {
           text: "Registro de encuesta Emininado..!!!",
           icon: "success",
         });
+        toggle();
       }
     });
   };
 
+  const handleOrder = (event) => {
+    console.log(event.target.value)
+    event.preventDefault();
+    dispatch(orderContact(event.target.value))
+  
+  };
+
+// console.log('___ ',survey)
+const [searchResults, setSearchResults] = useState([]);
+
+const handleSearch = (searchTerm) => {
+  const results = survey.filter((item) =>
+    item.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  if (results.length){
+    setSearchResults(results);   
+    toggle();    
+  } else{
+        toast.info(`${searchTerm} no existe`)
+  }
+  
+ 
+};
   return (
     <div className="container">
       <h2>Resultados de la Encuesta</h2>
+      <SearchBar onSearch={handleSearch} />
+                {/* -------------------------------------------------- */}
+
+                  {/* Ordenar ascendente y descendente */}
+                  <select                    
+                    name="order"
+                    id="order"
+                    onChange={handleOrder}
+                  >
+                    <option>Tipo de contacto</option>
+                    <option value="friends">Amigos</option>
+                    <option value="online_search">Busqueda Online</option>
+                    <option value="advertisement">Publicidad</option>
+                    <option value="all">Todos</option>
+                  </select>
+
+
+          {/* -------------------------------------------------- */}
+          <br />
+          <hr />
       <div className="table-responsive">
-        <table className="table table-bordered">
+        <table className="table table-bordered" style={{ textAlign:"center"}}>
           <thead>
             <tr>
-              <th>Nombre Completo</th>
-              <th>Cómo Encontró</th>
+              <th>Nombre</th>
+              <th>Encuentro por</th>
               <th>Suscripción al Boletín</th>
               <th>Número de Teléfono</th>
               <th>Idioma Preferido</th>
@@ -99,7 +137,7 @@ export const Result = () => {
             {Array.isArray(recordsToDisplay) &&
               recordsToDisplay.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.full_name}</td>
+                  <td style={{ background:'#759eff'}}>{item.full_name}</td>
                   {/* <td>{item.how_found}</td> */}
                   <td>
                     {(() => {
@@ -107,7 +145,7 @@ export const Result = () => {
                         case "friends":
                           return "Amigos";
                         case "online_search":
-                          return "Búsqueda en línea";
+                          return "Búsqueda en linea";
                         case "advertisement":
                           return "Publicidad";
                         default:
@@ -115,7 +153,9 @@ export const Result = () => {
                       }
                     })()}
                   </td>
-                  <td>{item.newsletter_subscription ? "Sí" : "No"}</td>
+                  <td>{item.newsletter_subscription 
+                  ? (<img style = {{ width:'20px'}} src={yes} alt="Si" />) 
+                  : (<img style = {{ width:'20px'}} src={not} alt="No" />)}</td>
                   <td>{item.phone_number}</td>
                   {/* <td>{item.preferred_language}</td> */}
                   <td>
@@ -161,17 +201,18 @@ export const Result = () => {
                 </tr>
               ))}
           </tbody>
+          <br />
           {/* componente de paginación */}
           <ReactPaginate
-            previousLabel={"Anterior"}
-            nextLabel={"Siguiente"}
-            breakLabel={"..."}
-            pageCount={totalPages}
+            previousLabel={"<"}
+            nextLabel={">"}
+            breakLabel={"____"}
+            pageCount={ totalPages } 
             onPageChange={handlePageChange}
             containerClassName={"pagination"}
             activeClassName={"active"}
-            previousLinkClassName={"btn btn-primary"}
-            nextLinkClassName={"btn btn-primary"}
+            previousLinkClassName={"btn btn-dark"}
+            nextLinkClassName={"btn btn-dark"}
           />
         </table>
       </div>
@@ -184,17 +225,97 @@ export const Result = () => {
           toggle={toggle}
           backdrop={backdrop}
           keyboard={keyboard}
+          className={style.modalFullscreen}
         >
-          <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+          <ModalHeader toggle={toggle}><img style={{width:'45px'}}
+          src={logo} alt="Edwar Castillo" /> Busqueda por nombre - Survey App</ModalHeader>
           <ModalBody>
-            <EditSurvey />
+          <div className="table-responsive">
+        <table className="table table-bordered" style={{ textAlign:"center"}}>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Encuentro por</th>
+              <th>Suscripción al Boletín</th>
+              <th>Número de Teléfono</th>
+              <th>Idioma Preferido</th>
+              <th>Fecha de Inicio</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(searchResults) &&
+              searchResults.map((item) => (
+                <tr key={item.id}>
+                  <td style={{ background:'#759eff'}}>{item.full_name}</td>
+                  {/* <td>{item.how_found}</td> */}
+                  <td>
+                    {(() => {
+                      switch (item.how_found) {
+                        case "friends":
+                          return "Amigos";
+                        case "online_search":
+                          return "Búsqueda en linea";
+                        case "advertisement":
+                          return "Publicidad";
+                        default:
+                          return "Default";
+                      }
+                    })()}
+                  </td>
+                  <td>{item.newsletter_subscription 
+                  ? (<img style = {{ width:'20px'}} src={yes} alt="Si" />) 
+                  : (<img style = {{ width:'20px'}} src={not} alt="No" />)}</td>
+                  <td>{item.phone_number}</td>
+                  {/* <td>{item.preferred_language}</td> */}
+                  <td>
+                    {(() => {
+                      switch (item.preferred_language) {
+                        case "english":
+                          return "Inglés";
+                        case "spanish":
+                          return "Español";
+                        case "french":
+                          return "Francés";
+                        case "german":
+                          return "Alemán";
+                        default:
+                          return "Default";
+                      }
+                    })()}
+                  </td>
+                  {/* <td>{item.start_date}</td> */}
+                  <td>
+                    {item.start_date
+                      ? new Date(item.start_date).toLocaleDateString()
+                      : ""}
+                  </td>
+
+                  <td>
+                   
+                    <Link to={`/surveyEdit/${item.id}`} className="btn FiEdit">
+                      <FaEdit />
+                    </Link>{" "}
+                    <button
+                      className="btn RiDeleteBin5Line"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+          <br />
+          {/* componente de paginación */}
+          
+        </table>
+      </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={toggle}>
-              Do Something
-            </Button>{" "}
-            <Button color="secondary" onClick={toggle}>
-              Cancel
+          
+            <Button className="btn btn-dark" onClick={toggle}>
+              Cerrar
             </Button>
           </ModalFooter>
         </Modal>

@@ -12,6 +12,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
+
 export const EditSurvey = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,12 +37,6 @@ export const EditSurvey = () => {
   useEffect(() => {
     if (
       survey.full_name
-      // &&
-      // survey.phone_number &&
-      // survey.start_date &&
-      // survey.preferred_language &&
-      // survey.how_found &&
-      // survey.newsletter_subscription
     ) {
       setEditData({
         full_name: survey.full_name,
@@ -62,9 +58,9 @@ export const EditSurvey = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(editData);
     dispatch(surveyEdit(id, editData));
     toast.info("¡Registro Modificado!");
+    dispatch(getSurvey());
     dispatch(getSurvey());
     setTimeout(() => {
       navigate("/result");
@@ -82,7 +78,6 @@ export const EditSurvey = () => {
       !phone_number ||
       !how_found ||
       preferred_language === "default";
-    console.log(isDisabled);
     setButtonDisable(isDisabled);
   };
 
@@ -97,13 +92,22 @@ export const EditSurvey = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
-  console.log(editData);
+  const cancelar = (event) => {
+    event.preventDefault();
+    toast.warning("¡El registro no fué actualizado!");
+    dispatch(getSurvey());
+    setTimeout(() => {
+      navigate("/result");
+    }, 2000);
+  };
+
+
+
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="card p-4" style={{ width: "60%" }}>
         <form onSubmit={handleSubmit}>
           <ToastContainer />
-
           {inputs.map((item) => (
             <div key={item.name} className="form-group">
               {item.type !== "submit" &&
@@ -170,11 +174,25 @@ export const EditSurvey = () => {
                   </label>
                 </div>
               ) : item.type === "submit" ? (
-                <button className="btn btn-primary" disabled={buttonDisable}>
-                  {item.label}
-                </button>
-              ) : (
-                <input
+                <div style={{ display: 'flex', justifyContent:"center", gap:10}}>
+                  <button
+                    className="btn btn-primary"
+                    style={{ padding: "10px 20px" }}
+                    disabled={buttonDisable}
+                  >
+                    Actualizar
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    style={{ padding: "10px 20px" }}
+                    type="button"
+                    onClick={cancelar}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              ) : (                
+                <input 
                   type={item.type}
                   className="form-control"
                   id={item.name}

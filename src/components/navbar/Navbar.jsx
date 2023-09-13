@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { getSurvey } from "../../redux/actions/actions";
+import 'jquery';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
 
 export function Navbar() {
+  const dispatch = useDispatch();
+  useEffect(() => { getSurvey() }, []);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <Link to="/" className="navbar-brand">
@@ -52,3 +60,4 @@ export function Navbar() {
     </nav>
   );
 }
+
