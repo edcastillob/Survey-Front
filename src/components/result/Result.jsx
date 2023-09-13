@@ -69,7 +69,24 @@ export const Result = () => {
           text: "Registro de encuesta Emininado..!!!",
           icon: "success",
         });
-        toggle();
+       
+      }
+    });
+  };
+  const handleDeleteModal = (itemId) => {
+    swal({
+      title: "Atención",
+      text: "Desea eliminar esta encuesta ?",
+      icon: "warning",
+      buttons: ["No", "Si"],
+    }).then((res) => {
+      if (res) {
+        dispatch(deleteSurvey(itemId));
+        swal({
+          text: "Registro de encuesta Emininado..!!!",
+          icon: "success",
+        });
+       toggle();
       }
     });
   };
@@ -298,7 +315,7 @@ const handleSearch = (searchTerm) => {
                     </Link>{" "}
                     <button
                       className="btn RiDeleteBin5Line"
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => handleDeleteModal(item.id)}
                     >
                       <FaTrash />
                     </button>

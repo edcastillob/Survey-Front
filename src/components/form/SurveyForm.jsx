@@ -38,11 +38,23 @@ export const SurveyForm = () => {
   }, [data]);
 
   const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
+
+    const { name, value, type, checked } = event.target;   
+   
+    if (type === 'text' && value !== '' && !/^[A-Za-z]+$/.test(value)) {
+    toast.warning('Ingrese solo texto')
+    return;
+  }
+
+  if (type === 'tel' && value !== '' && !/^[0-9]+$/.test(value)) {
+    toast.warning('Ingrese solo números')
+    return; 
+  }
     setData((data) => ({
       ...data,
       [name]: type === "checkbox" ? checked : value,
     }));
+    dispatch(getSurvey());
   };
 
   const handleSubmit = (event) => {
@@ -59,7 +71,7 @@ export const SurveyForm = () => {
       how_found: "",
       newsletter_subscription: true,
     });
-    dispatch(getSurvey()); // cargo a survey ede manera de actualizar el state global
+    dispatch(getSurvey()); 
   };
 
   const inputs = convertJsonToArray(archivo);
