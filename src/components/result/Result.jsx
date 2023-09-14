@@ -21,7 +21,7 @@ import yes from '../../assets/yes.jpg';
 import not from '../../assets/no.png';
 import { SearchBar } from "../searchBar/SearchBar";
 import style from './Result.module.css'
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -109,14 +109,17 @@ const handleSearch = (searchTerm) => {
     setSearchResults(results);   
     toggle();    
   } else{
-        toast.info(`${searchTerm} no existe`)
+    toast.warning(`${searchTerm}, no existe`)
+    console.log('__',searchTerm)
   }
   
+ 
  
 };
   return (
     <div className="container">
       <h2>Resultados de la Encuesta</h2>
+      <ToastContainer />
       <SearchBar onSearch={handleSearch} />
                 {/* -------------------------------------------------- */}
 

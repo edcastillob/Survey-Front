@@ -1,11 +1,19 @@
+
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = () => {
+    if (!/^[A-Za-z\s]*$/.test(searchTerm)) {
+      toast.warning('Ingrese solo texto');
+      setSearchTerm('');
+      return;
+    }
+
     onSearch(searchTerm);
-   
+    setSearchTerm('');
   };
 
   return (
